@@ -1,0 +1,10 @@
+# URL: https://secure.example.test/
+HTTP/2 200
+server: nginx
+content-type: text/html; charset=utf-8
+strict-transport-security: max-age=63072000; includeSubDomains; preload
+content-security-policy: script-src 'nonce-r4nd0m' 'strict-dynamic' 'unsafe-inline' https:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'
+x-content-type-options: nosniff
+referrer-policy: strict-origin-when-cross-origin
+permissions-policy: camera=(), microphone=(), geolocation=()
+set-cookie: __Host-session=dummyvalue; Path=/; Secure; HttpOnly; SameSite=Strict

@@ -1,0 +1,4 @@
+# URL: http://legacy.example.test/login
+HTTP/1.1 200 OK
+Content-Type: text/html
+Set-Cookie: sessionid=dummyvalue; Path=/; HttpOnly

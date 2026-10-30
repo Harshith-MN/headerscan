@@ -1,0 +1,32 @@
+{
+  "source": "hardened.txt",
+  "url": "https://secure.example.test/",
+  "status": 200,
+  "summary": {
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "info": 0
+  },
+  "findings": [],
+  "not_flagged": [
+    {
+      "rule": "CSP-UNSAFE-INLINE",
+      "reason": "'unsafe-inline' is present but ignored by modern browsers because a nonce/hash/'strict-dynamic' is also present (backward-compat pattern)."
+    },
+    {
+      "rule": "XFO-MISSING",
+      "reason": "CSP frame-ancestors is set and supersedes X-Frame-Options in modern browsers."
+    },
+    {
+      "rule": "DISCLOSE-SERVER",
+      "reason": "Server header ('nginx') names software but gives no version; not actionable."
+    }
+  ],
+  "passed": [
+    "HSTS: max-age=63072000",
+    "XCTO: nosniff",
+    "Referrer-Policy: strict-origin-when-cross-origin"
+  ],
+  "notes": []
+}

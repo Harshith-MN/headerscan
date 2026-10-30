@@ -1,0 +1,6 @@
+# URL: https://api.example.test/v1/status
+HTTP/1.1 200 OK
+Content-Type: application/json
+Strict-Transport-Security: max-age=31536000
+Access-Control-Allow-Origin: *
+Server: cloudflare

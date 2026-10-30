@@ -1,0 +1,17 @@
+# URL: https://shop.example.test/account
+HTTP/1.1 200 OK
+Server: Apache/2.4.29 (Ubuntu)
+X-Powered-By: PHP/7.2.1
+Content-Type: text/html; charset=UTF-8
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Credentials: true
+Strict-Transport-Security: max-age=300
+Set-Cookie: PHPSESSID=dummyvalue1; Path=/
+Set-Cookie: theme=dark; Path=/
+Set-Cookie: XSRF-TOKEN=dummyvalue2; Path=/; Secure; SameSite=Lax
+Set-Cookie: tracking=1; SameSite=None
+Set-Cookie: __Host-auth=dummyvalue3; Secure; Domain=shop.example.test; Path=/; HttpOnly
+Content-Length: 1234
+
+<html><body>demo page</body></html>

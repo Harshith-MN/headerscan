@@ -1,0 +1,43 @@
+{
+  "source": "json_api.txt",
+  "url": "https://api.example.test/v1/status",
+  "status": 200,
+  "summary": {
+    "high": 0,
+    "medium": 0,
+    "low": 1,
+    "info": 0
+  },
+  "findings": [
+    {
+      "rule": "XCTO-MISSING",
+      "severity": "low",
+      "title": "X-Content-Type-Options header missing",
+      "evidence": "(header absent)",
+      "why": "Browsers may MIME-sniff responses, which can turn uploads/JSON into executable content.",
+      "fix": "Add: X-Content-Type-Options: nosniff"
+    }
+  ],
+  "not_flagged": [
+    {
+      "rule": "CSP-MISSING",
+      "reason": "Content-Type is application/json, not an HTML document. CSP mainly protects rendered documents."
+    },
+    {
+      "rule": "XFO-MISSING",
+      "reason": "Content-Type is application/json, not an HTML document. Clickjacking applies to framed documents."
+    },
+    {
+      "rule": "DISCLOSE-SERVER",
+      "reason": "Server header ('cloudflare') names software but gives no version; not actionable."
+    },
+    {
+      "rule": "CORS-WILDCARD",
+      "reason": "ACAO: * without credentials is normal for public, unauthenticated APIs."
+    }
+  ],
+  "passed": [
+    "HSTS: max-age=31536000"
+  ],
+  "notes": []
+}

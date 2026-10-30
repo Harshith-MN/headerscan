@@ -1,0 +1,197 @@
+{
+  "source": "vulnerable.txt",
+  "url": "https://shop.example.test/account",
+  "status": 200,
+  "summary": {
+    "high": 0,
+    "medium": 8,
+    "low": 10,
+    "info": 4
+  },
+  "findings": [
+    {
+      "rule": "COOKIE-NO-HTTPONLY",
+      "severity": "medium",
+      "title": "Session-like cookie 'PHPSESSID' lacks HttpOnly",
+      "evidence": "Set-Cookie: PHPSESSID=<redacted>; path=/",
+      "why": "Any XSS can read the cookie and hijack the session.",
+      "fix": "Add HttpOnly."
+    },
+    {
+      "rule": "COOKIE-NO-SECURE",
+      "severity": "medium",
+      "title": "Cookie 'PHPSESSID' lacks Secure flag",
+      "evidence": "Set-Cookie: PHPSESSID=<redacted>; path=/",
+      "why": "The cookie can be sent over plain HTTP and sniffed or injected.",
+      "fix": "Add the Secure attribute."
+    },
+    {
+      "rule": "COOKIE-SAMESITE-NONE-INSECURE",
+      "severity": "medium",
+      "title": "Cookie 'tracking' uses SameSite=None without Secure",
+      "evidence": "Set-Cookie: tracking=<redacted>; samesite=None",
+      "why": "Browsers reject SameSite=None cookies that are not Secure.",
+      "fix": "Add Secure or change SameSite."
+    },
+    {
+      "rule": "CORS-WILDCARD-CREDS",
+      "severity": "medium",
+      "title": "CORS wildcard origin combined with credentials",
+      "evidence": "Access-Control-Allow-Origin: *; Allow-Credentials: true",
+      "why": "Browsers reject this pair, but it signals a misconfigured policy that may be 'fixed' by reflecting any Origin.",
+      "fix": "Use an explicit origin allow-list; never reflect arbitrary Origin with credentials."
+    },
+    {
+      "rule": "CSP-UNSAFE-EVAL",
+      "severity": "medium",
+      "title": "CSP script-src allows 'unsafe-eval'",
+      "evidence": "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:",
+      "why": "eval()-style execution is permitted, enabling several XSS gadgets.",
+      "fix": "Remove 'unsafe-eval' and refactor code that needs eval/new Function."
+    },
+    {
+      "rule": "CSP-UNSAFE-INLINE",
+      "severity": "medium",
+      "title": "CSP script-src allows 'unsafe-inline'",
+      "evidence": "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:",
+      "why": "Inline scripts run, which defeats most of CSP's XSS protection.",
+      "fix": "Use nonces or hashes instead of 'unsafe-inline'."
+    },
+    {
+      "rule": "CSP-WILDCARD-SCRIPT",
+      "severity": "medium",
+      "title": "CSP script-src uses overly broad source (https:)",
+      "evidence": "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:",
+      "why": "Scripts can be loaded from any matching origin, including attacker-controlled ones.",
+      "fix": "List specific trusted hosts or use nonces with 'strict-dynamic'."
+    },
+    {
+      "rule": "XFO-MISSING",
+      "severity": "medium",
+      "title": "No clickjacking protection (X-Frame-Options / frame-ancestors)",
+      "evidence": "(neither header present)",
+      "why": "The page can be framed by any site and used for clickjacking.",
+      "fix": "Add Content-Security-Policy: frame-ancestors 'self' (or X-Frame-Options: DENY)."
+    },
+    {
+      "rule": "COOKIE-NO-SAMESITE",
+      "severity": "low",
+      "title": "Session-like cookie 'PHPSESSID' lacks SameSite",
+      "evidence": "Set-Cookie: PHPSESSID=<redacted>; path=/",
+      "why": "Relies on browser defaults (Lax) for CSRF protection; older browsers differ.",
+      "fix": "Set SameSite=Lax or Strict explicitly."
+    },
+    {
+      "rule": "COOKIE-NO-SAMESITE",
+      "severity": "low",
+      "title": "Session-like cookie '__Host-auth' lacks SameSite",
+      "evidence": "Set-Cookie: __Host-auth=<redacted>; secure; domain=shop.example.test; path=/; httponly",
+      "why": "Relies on browser defaults (Lax) for CSRF protection; older browsers differ.",
+      "fix": "Set SameSite=Lax or Strict explicitly."
+    },
+    {
+      "rule": "COOKIE-NO-SECURE",
+      "severity": "low",
+      "title": "Cookie 'theme' lacks Secure flag",
+      "evidence": "Set-Cookie: theme=<redacted>; path=/",
+      "why": "The cookie can be sent over plain HTTP and sniffed or injected.",
+      "fix": "Add the Secure attribute."
+    },
+    {
+      "rule": "COOKIE-NO-SECURE",
+      "severity": "low",
+      "title": "Cookie 'tracking' lacks Secure flag",
+      "evidence": "Set-Cookie: tracking=<redacted>; samesite=None",
+      "why": "The cookie can be sent over plain HTTP and sniffed or injected.",
+      "fix": "Add the Secure attribute."
+    },
+    {
+      "rule": "COOKIE-PREFIX",
+      "severity": "low",
+      "title": "Cookie '__Host-auth' violates __Host- prefix rules",
+      "evidence": "Set-Cookie: __Host-auth=<redacted>; secure; domain=shop.example.test; path=/; httponly",
+      "why": "__Host- requires Secure, Path=/ and no Domain; browsers drop the cookie otherwise.",
+      "fix": "Fix the attributes or drop the prefix."
+    },
+    {
+      "rule": "CSP-NO-BASE-URI",
+      "severity": "low",
+      "title": "CSP lacks base-uri",
+      "evidence": "Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:",
+      "why": "Injected <base> tags could redirect relative URLs.",
+      "fix": "Add base-uri 'none' or 'self'."
+    },
+    {
+      "rule": "DISCLOSE-POWEREDBY",
+      "severity": "low",
+      "title": "x-powered-by header reveals technology",
+      "evidence": "x-powered-by: PHP/7.2.1",
+      "why": "Reveals the stack/version to attackers.",
+      "fix": "Remove the header."
+    },
+    {
+      "rule": "DISCLOSE-SERVER",
+      "severity": "low",
+      "title": "Server header discloses a version",
+      "evidence": "Server: Apache/2.4.29 (Ubuntu)",
+      "why": "Exact versions help attackers match known CVEs.",
+      "fix": "Remove the version (e.g. ServerTokens Prod / server_tokens off)."
+    },
+    {
+      "rule": "HSTS-SHORT",
+      "severity": "low",
+      "title": "HSTS max-age is short (300 s)",
+      "evidence": "Strict-Transport-Security: max-age=300",
+      "why": "A short window leaves users unprotected once it expires.",
+      "fix": "Raise max-age to >= 31536000 (1 year)."
+    },
+    {
+      "rule": "XCTO-MISSING",
+      "severity": "low",
+      "title": "X-Content-Type-Options header missing",
+      "evidence": "(header absent)",
+      "why": "Browsers may MIME-sniff responses, which can turn uploads/JSON into executable content.",
+      "fix": "Add: X-Content-Type-Options: nosniff"
+    },
+    {
+      "rule": "COOKIE-NO-HTTPONLY",
+      "severity": "info",
+      "title": "Cookie 'theme' lacks HttpOnly",
+      "evidence": "Set-Cookie: theme=<redacted>; path=/",
+      "why": "Name does not look like a session cookie; JS access may be intended. Verify.",
+      "fix": "Add HttpOnly if client scripts do not need it."
+    },
+    {
+      "rule": "COOKIE-NO-HTTPONLY",
+      "severity": "info",
+      "title": "Cookie 'tracking' lacks HttpOnly",
+      "evidence": "Set-Cookie: tracking=<redacted>; samesite=None",
+      "why": "Name does not look like a session cookie; JS access may be intended. Verify.",
+      "fix": "Add HttpOnly if client scripts do not need it."
+    },
+    {
+      "rule": "PERMISSIONS-MISSING",
+      "severity": "info",
+      "title": "Permissions-Policy header missing",
+      "evidence": "(header absent)",
+      "why": "Powerful browser features are not explicitly restricted.",
+      "fix": "Add e.g. Permissions-Policy: camera=(), microphone=(), geolocation=()"
+    },
+    {
+      "rule": "REFERRER-MISSING",
+      "severity": "info",
+      "title": "Referrer-Policy header missing",
+      "evidence": "(header absent)",
+      "why": "Modern browsers default to strict-origin-when-cross-origin, so impact is small.",
+      "fix": "Set Referrer-Policy: strict-origin-when-cross-origin (or stricter)."
+    }
+  ],
+  "not_flagged": [
+    {
+      "rule": "COOKIE-NO-HTTPONLY:XSRF-TOKEN",
+      "reason": "CSRF/XSRF token cookies are intentionally readable by JavaScript (double-submit pattern)."
+    }
+  ],
+  "passed": [],
+  "notes": []
+}

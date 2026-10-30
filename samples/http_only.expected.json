@@ -1,0 +1,73 @@
+{
+  "source": "http_only.txt",
+  "url": "http://legacy.example.test/login",
+  "status": 200,
+  "summary": {
+    "high": 0,
+    "medium": 2,
+    "low": 2,
+    "info": 2
+  },
+  "findings": [
+    {
+      "rule": "CSP-MISSING",
+      "severity": "medium",
+      "title": "Content-Security-Policy header missing",
+      "evidence": "(header absent)",
+      "why": "No CSP means XSS has no second line of defence.",
+      "fix": "Start with: default-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
+    },
+    {
+      "rule": "XFO-MISSING",
+      "severity": "medium",
+      "title": "No clickjacking protection (X-Frame-Options / frame-ancestors)",
+      "evidence": "(neither header present)",
+      "why": "The page can be framed by any site and used for clickjacking.",
+      "fix": "Add Content-Security-Policy: frame-ancestors 'self' (or X-Frame-Options: DENY)."
+    },
+    {
+      "rule": "COOKIE-NO-SAMESITE",
+      "severity": "low",
+      "title": "Session-like cookie 'sessionid' lacks SameSite",
+      "evidence": "Set-Cookie: sessionid=<redacted>; path=/; httponly",
+      "why": "Relies on browser defaults (Lax) for CSRF protection; older browsers differ.",
+      "fix": "Set SameSite=Lax or Strict explicitly."
+    },
+    {
+      "rule": "XCTO-MISSING",
+      "severity": "low",
+      "title": "X-Content-Type-Options header missing",
+      "evidence": "(header absent)",
+      "why": "Browsers may MIME-sniff responses, which can turn uploads/JSON into executable content.",
+      "fix": "Add: X-Content-Type-Options: nosniff"
+    },
+    {
+      "rule": "PERMISSIONS-MISSING",
+      "severity": "info",
+      "title": "Permissions-Policy header missing",
+      "evidence": "(header absent)",
+      "why": "Powerful browser features are not explicitly restricted.",
+      "fix": "Add e.g. Permissions-Policy: camera=(), microphone=(), geolocation=()"
+    },
+    {
+      "rule": "REFERRER-MISSING",
+      "severity": "info",
+      "title": "Referrer-Policy header missing",
+      "evidence": "(header absent)",
+      "why": "Modern browsers default to strict-origin-when-cross-origin, so impact is small.",
+      "fix": "Set Referrer-Policy: strict-origin-when-cross-origin (or stricter)."
+    }
+  ],
+  "not_flagged": [
+    {
+      "rule": "HSTS-MISSING",
+      "reason": "Response was served over plain HTTP; browsers ignore HSTS on HTTP (RFC 6797). The real issue is the lack of HTTPS."
+    },
+    {
+      "rule": "COOKIE-NO-SECURE:sessionid",
+      "reason": "Response is plain HTTP; browsers refuse Secure cookies there. Fix is HTTPS, not the flag."
+    }
+  ],
+  "passed": [],
+  "notes": []
+}
